@@ -1,9 +1,15 @@
 import { Star, ArrowRight, Heart, Eye, ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import QuickViewModal from "./QuickViewModal";
+import {
+  useMedusaProducts,
+  getProductPrice,
+  getProductRating,
+  getProductBadge,
+} from "@/hooks/use-medusa-products";
 
 type Product = {
-  id: number;
+  id: number | string;
   title: string;
   price: string;
   originalPrice?: string;
@@ -25,7 +31,8 @@ const products: Product[] = [
     badgeColor: "bg-secondary text-secondary-foreground",
     rating: 4.8,
     type: "digital",
-    description: "A comprehensive step-by-step guide covering visa applications for over 20 countries. Includes document checklists, interview tips, and common mistakes to avoid.",
+    description:
+      "A comprehensive step-by-step guide covering visa applications for over 20 countries. Includes document checklists, interview tips, and common mistakes to avoid.",
     saleRibbon: "HOT SALE 50% OFF",
   },
   {
@@ -37,7 +44,8 @@ const products: Product[] = [
     badgeColor: "bg-destructive text-destructive-foreground",
     rating: 4.9,
     type: "digital",
-    description: "Master the art of writing compelling Statements of Purpose. Includes 15+ templates, university-specific tips, and expert review guidelines.",
+    description:
+      "Master the art of writing compelling Statements of Purpose. Includes 15+ templates, university-specific tips, and expert review guidelines.",
   },
   {
     id: 3,
@@ -47,7 +55,8 @@ const products: Product[] = [
     badgeColor: "bg-primary text-primary-foreground",
     rating: 4.7,
     type: "digital",
-    description: "Detailed country-specific checklists for UK, Canada, USA, and Australia. Know exactly what documents you need before you start.",
+    description:
+      "Detailed country-specific checklists for UK, Canada, USA, and Australia. Know exactly what documents you need before you start.",
   },
   {
     id: 4,
@@ -56,12 +65,19 @@ const products: Product[] = [
     originalPrice: "$12.99",
     rating: 4.6,
     type: "digital",
-    description: "Compare travel insurance plans across 10+ providers. Understand coverage types, exclusions, and find the best value for your journey.",
+    description:
+      "Compare travel insurance plans across 10+ providers. Understand coverage types, exclusions, and find the best value for your journey.",
     saleRibbon: "SAVE 40% TODAY",
   },
 ];
 
-const ProductCard = ({ product, onQuickView }: { product: Product; onQuickView: (p: Product) => void }) => {
+const ProductCard = ({
+  product,
+  onQuickView,
+}: {
+  product: Product;
+  onQuickView: (p: Product) => void;
+}) => {
   const [wishlisted, setWishlisted] = useState(false);
 
   return (
@@ -81,7 +97,9 @@ const ProductCard = ({ product, onQuickView }: { product: Product; onQuickView: 
 
         {/* Badge */}
         {product.badge && (
-          <span className={`absolute top-3 left-3 text-[10px] font-bold px-2.5 py-1 rounded-sm ${product.badgeColor}`}>
+          <span
+            className={`absolute top-3 left-3 text-[10px] font-bold px-2.5 py-1 rounded-sm ${product.badgeColor}`}
+          >
             {product.badge}
           </span>
         )}
@@ -89,14 +107,20 @@ const ProductCard = ({ product, onQuickView }: { product: Product; onQuickView: 
         {/* Side action icons */}
         <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all duration-300">
           <button
-            onClick={(e) => { e.stopPropagation(); setWishlisted(!wishlisted); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              setWishlisted(!wishlisted);
+            }}
             className={`w-9 h-9 rounded-full border border-border bg-background flex items-center justify-center hover:bg-secondary hover:text-secondary-foreground hover:border-secondary transition-all ${wishlisted ? "bg-destructive/10 text-destructive border-destructive/30" : "text-foreground"}`}
             aria-label="Add to wishlist"
           >
             <Heart className={`h-4 w-4 ${wishlisted ? "fill-current" : ""}`} />
           </button>
           <button
-            onClick={(e) => { e.stopPropagation(); onQuickView(product); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onQuickView(product);
+            }}
             className="w-9 h-9 rounded-full border border-border bg-background text-foreground flex items-center justify-center hover:bg-secondary hover:text-secondary-foreground hover:border-secondary transition-all"
             aria-label="Quick view"
           >
@@ -109,7 +133,12 @@ const ProductCard = ({ product, onQuickView }: { product: Product; onQuickView: 
           <div className="absolute bottom-12 left-0 right-0 bg-destructive text-destructive-foreground overflow-hidden py-1">
             <div className="animate-marquee whitespace-nowrap flex">
               {Array.from({ length: 8 }).map((_, i) => (
-                <span key={i} className="text-[10px] font-bold mx-4 tracking-wider">{product.saleRibbon}</span>
+                <span
+                  key={i}
+                  className="text-[10px] font-bold mx-4 tracking-wider"
+                >
+                  {product.saleRibbon}
+                </span>
               ))}
             </div>
           </div>
@@ -133,17 +162,25 @@ const ProductCard = ({ product, onQuickView }: { product: Product; onQuickView: 
           <Star
             key={i}
             className={`h-3 w-3 ${
-              i < Math.floor(product.rating) ? "fill-secondary text-secondary" : "text-border"
+              i < Math.floor(product.rating)
+                ? "fill-secondary text-secondary"
+                : "text-border"
             }`}
           />
         ))}
-        <span className="text-xs text-muted-foreground ml-1">{product.rating}</span>
+        <span className="text-xs text-muted-foreground ml-1">
+          {product.rating}
+        </span>
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="font-body font-semibold text-foreground">{product.price}</span>
+        <span className="font-body font-semibold text-foreground">
+          {product.price}
+        </span>
         {product.originalPrice && (
-          <span className="text-sm text-muted-foreground line-through">{product.originalPrice}</span>
+          <span className="text-sm text-muted-foreground line-through">
+            {product.originalPrice}
+          </span>
         )}
       </div>
     </div>
@@ -151,7 +188,30 @@ const ProductCard = ({ product, onQuickView }: { product: Product; onQuickView: 
 };
 
 const FeaturedProducts = () => {
-  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
+  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(
+    null,
+  );
+  const { data, isLoading } = useMedusaProducts({ limit: 4 });
+
+  // Map Medusa products to local Product type, fallback to hardcoded
+  const displayProducts: Product[] = data?.products?.length
+    ? data.products.map((mp) => {
+        const { price, originalPrice } = getProductPrice(mp);
+        const badge = getProductBadge(mp);
+        return {
+          id: mp.id,
+          title: mp.title,
+          price: price || "$0.00",
+          originalPrice: originalPrice ?? undefined,
+          badge: badge?.text,
+          badgeColor: badge?.color,
+          rating: getProductRating(mp),
+          type: (mp.metadata?.type as "digital" | "service") || "digital",
+          description: mp.description || "",
+          saleRibbon: mp.metadata?.saleRibbon as string | undefined,
+        };
+      })
+    : products;
 
   return (
     <>
@@ -174,15 +234,27 @@ const FeaturedProducts = () => {
             </a>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-            {products.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onQuickView={setQuickViewProduct}
-              />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="bg-muted rounded-lg aspect-[3/4] mb-4" />
+                  <div className="h-4 bg-muted rounded w-3/4 mb-2" />
+                  <div className="h-3 bg-muted rounded w-1/2" />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+              {displayProducts.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onQuickView={setQuickViewProduct}
+                />
+              ))}
+            </div>
+          )}
 
           <div className="md:hidden mt-8 text-center">
             <a
@@ -198,14 +270,18 @@ const FeaturedProducts = () => {
       <QuickViewModal
         open={!!quickViewProduct}
         onClose={() => setQuickViewProduct(null)}
-        product={quickViewProduct ? {
-          title: quickViewProduct.title,
-          price: quickViewProduct.price,
-          originalPrice: quickViewProduct.originalPrice,
-          rating: quickViewProduct.rating,
-          description: quickViewProduct.description,
-          badge: quickViewProduct.badge,
-        } : undefined}
+        product={
+          quickViewProduct
+            ? {
+                title: quickViewProduct.title,
+                price: quickViewProduct.price,
+                originalPrice: quickViewProduct.originalPrice,
+                rating: quickViewProduct.rating,
+                description: quickViewProduct.description,
+                badge: quickViewProduct.badge,
+              }
+            : undefined
+        }
       />
     </>
   );
