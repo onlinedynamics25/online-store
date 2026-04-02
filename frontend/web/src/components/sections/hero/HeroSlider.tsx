@@ -31,7 +31,7 @@ const HeroSlider = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % slides.length);
-    }, 6000);
+    }, 8000);
     return () => clearInterval(timer);
   }, []);
 
@@ -76,7 +76,7 @@ const HeroSlider = () => {
       </div>
 
       {/* Arrows */}
-      <button
+      {/* <button
         onClick={() => setCurrent((prev) => (prev - 1 + slides.length) % slides.length)}
         className="absolute left-4 top-1/2 -translate-y-1/2 bg-background/20 backdrop-blur-sm text-primary-foreground p-2 rounded-full hover:bg-background/40 transition-colors"
         aria-label="Previous slide"
@@ -89,7 +89,7 @@ const HeroSlider = () => {
         aria-label="Next slide"
       >
         <ChevronRight className="h-5 w-5" />
-      </button>
+      </button> */}
 
       {/* Dots */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">

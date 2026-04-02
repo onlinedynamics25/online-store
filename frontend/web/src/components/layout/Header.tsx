@@ -1,7 +1,8 @@
 import { Search, User, Heart, ShoppingCart, Menu, X } from "lucide-react";
 import { useState } from "react";
-import SearchOverlay from "./SearchOverlay";
-import CartDrawer from "./CartDrawer";
+import SearchOverlay from "../features/search/SearchOverlay";
+import CartDrawer from "../features/cart/CartDrawer";
+import { useAuth } from "@/context/AuthContext";
 
 const navLinks = [
   { label: "Home", href: "#" },
@@ -15,6 +16,7 @@ const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+  const { isAuthenticated, user, promptAuth, logout } = useAuth();
 
   return (
     <>
@@ -39,7 +41,11 @@ const Header = () => {
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
-            {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {mobileOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
           </button>
 
           {/* Logo */}
@@ -58,10 +64,56 @@ const Header = () => {
             >
               <Search className="h-5 w-5" />
             </button>
-            <button className="text-foreground hover:text-secondary transition-colors hidden sm:block" aria-label="Account">
-              <User className="h-5 w-5" />
-            </button>
-            <button className="text-foreground hover:text-secondary transition-colors hidden sm:block" aria-label="Wishlist">
+            <div className="relative">
+              <button
+                className="text-foreground hover:text-secondary transition-colors hidden sm:block"
+                aria-label="Account"
+                onClick={() => {
+                  // console.log("Button clicked");
+
+                  if (!isAuthenticated) {
+                    // console.log(
+                    //   "🟢 User icon clicked, isAuthenticated:",
+                    //   isAuthenticated,
+                    // );
+                    promptAuth("login");
+                  }
+                }}
+              >
+                <User className="h-5 w-5" />
+                {isAuthenticated && <span className="user-indicator">●</span>}
+              </button>
+              {isAuthenticated && (
+                <div className="absolute right-0 mt-2 w-48 bg-background border border-border rounded-lg shadow-lg py-2 z-50">
+                  <p className="px-4 py-2 text-sm text-foreground">
+                    Welcome, {user?.name}
+                  </p>
+                  <hr className="my-1" />
+                  <a
+                    href="/profile"
+                    className="block px-4 py-2 text-sm hover:bg-muted"
+                  >
+                    Profile
+                  </a>
+                  <a
+                    href="/orders"
+                    className="block px-4 py-2 text-sm hover:bg-muted"
+                  >
+                    My Orders
+                  </a>
+                  <button
+                    onClick={logout}
+                    className="block w-full text-left px-4 py-2 text-sm hover:bg-muted"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+            <button
+              className="text-foreground hover:text-secondary transition-colors hidden sm:block"
+              aria-label="Wishlist"
+            >
               <Heart className="h-5 w-5" />
             </button>
             <button

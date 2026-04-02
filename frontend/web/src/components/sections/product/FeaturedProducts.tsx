@@ -1,6 +1,6 @@
 import { Star, ArrowRight, Heart, Eye, ShoppingCart } from "lucide-react";
 import { useState } from "react";
-import QuickViewModal from "./QuickViewModal";
+import QuickViewModal from "../../features/product/QuickViewModal";
 import {
   useMedusaProducts,
   getProductPrice,
