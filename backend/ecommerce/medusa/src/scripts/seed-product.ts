@@ -1,4 +1,4 @@
-export default async function seedProducts({ container }) {
+export default async function seedProducts({ container }: { container: any }) {
   const productService = container.resolve("productService");
 
   const products = [

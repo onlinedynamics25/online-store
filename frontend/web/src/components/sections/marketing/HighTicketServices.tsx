@@ -38,6 +38,7 @@ const services: Service[] = [
     price: "From $2,999",
     description: "Citizenship by investment programs in select countries",
     rating: 4.8,
+    badge: "RECOMMENDED",
   },
   {
     id: 4,
